@@ -21,10 +21,42 @@ impl ops::Add<&Vec3> for &Vec3 {
     }
 }
 
+impl ops::Add<Vec3> for &Vec3 {
+    type Output = Vec3;
+
+    fn add(self, _rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x + _rhs.x, self.y + _rhs.y, self.z + _rhs.z)
+    }
+}
+
+impl ops::Add<Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn add(self, _rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x + _rhs.x, self.y + _rhs.y, self.z + _rhs.z)
+    }
+}
+
 impl ops::Sub<&Vec3> for &Vec3 {
     type Output = Vec3;
 
     fn sub(self, _rhs: &Vec3) -> Vec3 {
+        Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
+    }
+}
+
+impl ops::Sub<Vec3> for &Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, _rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
+    }
+}
+
+impl ops::Sub<Vec3> for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, _rhs: Vec3) -> Vec3 {
         Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
     }
 }
@@ -52,17 +84,45 @@ mod tests {
     }
 
     #[test]
-    fn test_addition() {
+    fn test_addition_references() {
         let v1 = Vec3::new(1.0, 2.0, 3.0);
         let v2 = Vec3::new(3.0, 4.0, 5.0);
         assert_almost_eq(&(&v1 + &v2), &Vec3::new(4.0, 6.0, 8.0));
     }
 
     #[test]
-    fn test_subtraction() {
+    fn test_addition_value_and_reference() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let v2 = Vec3::new(3.0, 4.0, 5.0);
+        assert_almost_eq(&(&v1 + v2), &Vec3::new(4.0, 6.0, 8.0));
+    }
+
+    #[test]
+    fn test_addition_values() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let v2 = Vec3::new(3.0, 4.0, 5.0);
+        assert_almost_eq(&(v1 + v2), &Vec3::new(4.0, 6.0, 8.0));
+    }
+
+    #[test]
+    fn test_subtraction_references() {
         let v1 = Vec3::new(1.0, 2.0, 3.0);
         let v2 = Vec3::new(-1.0, 4.0, 2.0);
         assert_almost_eq(&(&v1 - &v2), &Vec3::new(2.0, -2.0, 1.0));
+    }
+
+    #[test]
+    fn test_subtraction_value_and_reference() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let v2 = Vec3::new(-1.0, 4.0, 2.0);
+        assert_almost_eq(&(&v1 - v2), &Vec3::new(2.0, -2.0, 1.0));
+    }
+
+    #[test]
+    fn test_subtraction_values() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let v2 = Vec3::new(-1.0, 4.0, 2.0);
+        assert_almost_eq(&(v1 - v2), &Vec3::new(2.0, -2.0, 1.0));
     }
 
     #[test]
