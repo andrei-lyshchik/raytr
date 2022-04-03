@@ -8,7 +8,7 @@ fn write_color(color: &Vec3) {
 fn ray_color(ray: &Ray) -> Vec3 {
     let unit_direction = ray.direction.unit_vector();
     let t = 0.5 * (unit_direction.y + 1.0);
-    return Vec3::new(1.0, 1.0, 1.0) * (1.0 - t) + Vec3::new(0.5, 0.7, 1.0) * t
+    return Vec3::new(0.5, 0.7, 1.0) * (1.0 - t) + Vec3::new(1.0, 1.0, 1.0) * t
 }
 
 fn main() {
@@ -28,6 +28,7 @@ fn main() {
 
     println!("P3");
     println!("{} {}", image_width, image_height);
+    println!("255");
 
     for j in 0 .. image_height {
         for i in 0 .. image_width {
