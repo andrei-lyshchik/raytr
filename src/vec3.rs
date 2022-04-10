@@ -1,5 +1,7 @@
 use std::ops;
 
+use rand::{thread_rng, Rng};
+
 #[derive(Debug, Clone)]
 pub struct Vec3 {
     pub x: f64,
@@ -22,6 +24,37 @@ impl Vec3 {
 
     pub fn unit_vector(self: &Vec3) -> Vec3 {
         self / self.length()
+    }
+
+    pub fn random(min: f64, max: f64) -> Vec3 {
+        Vec3::new(
+            thread_rng().gen_range(min..max),
+            thread_rng().gen_range(min..max),
+            thread_rng().gen_range(min..max),
+        )
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let p = Vec3::random(-1.0, 1.0);
+            if p.dot(&p) >= 1.0 {
+                continue;
+            }
+            return p;
+        }
+    }
+
+    pub fn random_unit_vector() -> Vec3 {
+        Vec3::random_in_unit_sphere().unit_vector()
+    }
+
+    pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
+        let in_unit_sphere = Vec3::random_in_unit_sphere();
+        if in_unit_sphere.dot(&normal) > 0.0 {
+            in_unit_sphere
+        } else {
+            -in_unit_sphere
+        }
     }
 }
 

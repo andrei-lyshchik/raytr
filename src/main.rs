@@ -19,7 +19,11 @@ fn clamp(x: f64, min: f64, max: f64) -> f64 {
 
 fn write_color(color: &Vec3, samples_per_pixel: i32) {
     let scale = 1.0 / (samples_per_pixel as f64);
-    let (r, g, b) = (color.x * scale, color.y * scale, color.z * scale);
+    let (r, g, b) = (
+        (color.x * scale).sqrt(),
+        (color.y * scale).sqrt(),
+        (color.z * scale).sqrt(),
+    );
     let (r_int, g_int, b_int) = (
         (256.0 * clamp(r, 0.0, 0.999)) as i32,
         (256.0 * clamp(g, 0.0, 0.999)) as i32,
@@ -28,9 +32,19 @@ fn write_color(color: &Vec3, samples_per_pixel: i32) {
     println!("{} {} {}", r_int, g_int, b_int);
 }
 
-fn ray_color(ray: &Ray, world: &dyn Hittable) -> Vec3 {
+fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Vec3 {
+    if depth <= 0 {
+        return Vec3::new(0.0, 0.0, 0.0);
+    }
     if let Some(hit) = world.hit(ray, 0.0, f64::INFINITY) {
-        return (hit.normal() + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
+        let target = hit.point() + hit.normal() + Vec3::random_unit_vector();
+        // let target = hit.point() + hit.normal() + Vec3::random_in_unit_sphere();
+        // let target = hit.point() + Vec3::random_in_hemisphere(hit.normal());
+        return ray_color(
+            &Ray::new(hit.point().clone(), &target - hit.point()),
+            world,
+            depth - 1,
+        );
     }
     let unit_direction = ray.direction.unit_vector();
     let t = 0.5 * (unit_direction.y + 1.0);
@@ -39,9 +53,10 @@ fn ray_color(ray: &Ray, world: &dyn Hittable) -> Vec3 {
 
 fn main() {
     let camera = Camera::new();
-    let image_width = 1000;
+    let image_width = 400;
     let image_height = ((image_width as f64) / camera.aspect_ratio) as i32;
     let samples_per_pixel = 100;
+    let max_depth = 50;
 
     let world = HittableList::new(vec![
         Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)),
@@ -59,7 +74,7 @@ fn main() {
                 let u = ((i as f64) + random::<f64>()) / (image_width as f64 - 1.0);
                 let v = ((j as f64) + random::<f64>()) / (image_height as f64 - 1.0);
                 let ray = camera.ray(u, v);
-                pixel_color += ray_color(&ray, &world);
+                pixel_color += ray_color(&ray, &world, max_depth);
             }
             write_color(&pixel_color, samples_per_pixel);
         }

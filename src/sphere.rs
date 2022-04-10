@@ -1,6 +1,6 @@
 use crate::{
     hittable::{Hit, Hittable},
-    vec3::Vec3,
+    vec3::Vec3, ray::Ray,
 };
 
 pub struct Sphere {
@@ -15,7 +15,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(self: &Sphere, ray: &crate::ray::Ray, t_min: f64, t_max: f64) -> Option<Hit> {
+    fn hit(self: &Sphere, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let oc = &ray.origin - &self.center;
         let a = ray.direction.dot(&ray.direction);
         let half_b = ray.direction.dot(&oc);
