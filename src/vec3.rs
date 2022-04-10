@@ -57,6 +57,14 @@ impl ops::Sub<&Vec3> for &Vec3 {
     }
 }
 
+impl ops::Neg for Vec3 {
+    type Output = Vec3;
+
+    fn neg(self) -> Vec3 {
+        Vec3::new(-self.x, -self.y, -self.z)
+    }
+}
+
 impl ops::Sub<Vec3> for &Vec3 {
     type Output = Vec3;
 
@@ -82,6 +90,14 @@ impl ops::Sub<&Vec3> for Vec3 {
 }
 
 impl ops::Div<f64> for &Vec3 {
+    type Output = Vec3;
+
+    fn div(self, _rhs: f64) -> Vec3 {
+        Vec3::new(self.x / _rhs, self.y / _rhs, self.z / _rhs)
+    }
+}
+
+impl ops::Div<f64> for Vec3 {
     type Output = Vec3;
 
     fn div(self, _rhs: f64) -> Vec3 {
