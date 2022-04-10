@@ -16,8 +16,8 @@ impl Vec3 {
         self.dot(self).sqrt()
     }
 
-    pub fn dot(self: &Vec3, _rhs: &Vec3) -> f64 {
-        self.x * _rhs.x + self.y * _rhs.y + self.z * _rhs.z
+    pub fn dot(self: &Vec3, rhs: &Vec3) -> f64 {
+        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 
     pub fn unit_vector(self: &Vec3) -> Vec3 {
@@ -28,32 +28,32 @@ impl Vec3 {
 impl ops::Add<&Vec3> for &Vec3 {
     type Output = Vec3;
 
-    fn add(self, _rhs: &Vec3) -> Vec3 {
-        Vec3::new(self.x + _rhs.x, self.y + _rhs.y, self.z + _rhs.z)
+    fn add(self, rhs: &Vec3) -> Vec3 {
+        Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
     }
 }
 
 impl ops::Add<Vec3> for &Vec3 {
     type Output = Vec3;
 
-    fn add(self, _rhs: Vec3) -> Vec3 {
-        Vec3::new(self.x + _rhs.x, self.y + _rhs.y, self.z + _rhs.z)
+    fn add(self, rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
     }
 }
 
 impl ops::Add<Vec3> for Vec3 {
     type Output = Vec3;
 
-    fn add(self, _rhs: Vec3) -> Vec3 {
-        Vec3::new(self.x + _rhs.x, self.y + _rhs.y, self.z + _rhs.z)
+    fn add(self, rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
     }
 }
 
 impl ops::Sub<&Vec3> for &Vec3 {
     type Output = Vec3;
 
-    fn sub(self, _rhs: &Vec3) -> Vec3 {
-        Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
+    fn sub(self, rhs: &Vec3) -> Vec3 {
+        Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
     }
 }
 
@@ -68,56 +68,64 @@ impl ops::Neg for Vec3 {
 impl ops::Sub<Vec3> for &Vec3 {
     type Output = Vec3;
 
-    fn sub(self, _rhs: Vec3) -> Vec3 {
-        Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
+    fn sub(self, rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
     }
 }
 
 impl ops::Sub<Vec3> for Vec3 {
     type Output = Vec3;
 
-    fn sub(self, _rhs: Vec3) -> Vec3 {
-        Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
+    fn sub(self, rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
     }
 }
 
 impl ops::Sub<&Vec3> for Vec3 {
     type Output = Vec3;
 
-    fn sub(self, _rhs: &Vec3) -> Vec3 {
-        Vec3::new(self.x - _rhs.x, self.y - _rhs.y, self.z - _rhs.z)
+    fn sub(self, rhs: &Vec3) -> Vec3 {
+        Vec3::new(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
     }
 }
 
 impl ops::Div<f64> for &Vec3 {
     type Output = Vec3;
 
-    fn div(self, _rhs: f64) -> Vec3 {
-        Vec3::new(self.x / _rhs, self.y / _rhs, self.z / _rhs)
+    fn div(self, rhs: f64) -> Vec3 {
+        Vec3::new(self.x / rhs, self.y / rhs, self.z / rhs)
     }
 }
 
 impl ops::Div<f64> for Vec3 {
     type Output = Vec3;
 
-    fn div(self, _rhs: f64) -> Vec3 {
-        Vec3::new(self.x / _rhs, self.y / _rhs, self.z / _rhs)
+    fn div(self, rhs: f64) -> Vec3 {
+        Vec3::new(self.x / rhs, self.y / rhs, self.z / rhs)
     }
 }
 
 impl ops::Mul<f64> for &Vec3 {
     type Output = Vec3;
 
-    fn mul(self, _rhs: f64) -> Vec3 {
-        Vec3::new(self.x * _rhs, self.y * _rhs, self.z * _rhs)
+    fn mul(self, rhs: f64) -> Vec3 {
+        Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
     }
 }
 
 impl ops::Mul<f64> for Vec3 {
     type Output = Vec3;
 
-    fn mul(self, _rhs: f64) -> Vec3 {
-        Vec3::new(self.x * _rhs, self.y * _rhs, self.z * _rhs)
+    fn mul(self, rhs: f64) -> Vec3 {
+        Vec3::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl ops::AddAssign<Vec3> for Vec3 {
+    fn add_assign(&mut self, rhs: Vec3) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
     }
 }
 
