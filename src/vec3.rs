@@ -36,6 +36,14 @@ impl Vec3 {
         self - normal * self.dot(normal) * 2.0
     }
 
+    pub fn refract(unit_vector: &Vec3, normal: &Vec3, etai_over_etat: f64) -> Vec3 {
+        let cos_theta = f64::min(normal.dot(&-unit_vector), 1.0);
+        let res_perp = (unit_vector + normal * cos_theta) * etai_over_etat;
+        let res_parallel = normal * -(1.0 - res_perp.dot(&res_perp)).abs().sqrt();
+
+        res_perp + res_parallel
+    }
+
     pub fn random(min: f64, max: f64) -> Vec3 {
         Vec3::new(
             thread_rng().gen_range(min..max),
@@ -101,6 +109,14 @@ impl ops::Sub<&Vec3> for &Vec3 {
 }
 
 impl ops::Neg for Vec3 {
+    type Output = Vec3;
+
+    fn neg(self) -> Vec3 {
+        Vec3::new(-self.x, -self.y, -self.z)
+    }
+}
+
+impl ops::Neg for &Vec3 {
     type Output = Vec3;
 
     fn neg(self) -> Vec3 {

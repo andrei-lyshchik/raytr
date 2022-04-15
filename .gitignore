@@ -1,3 +1,4 @@
 /target
 *.ppf
+*.png
 .DS_Store

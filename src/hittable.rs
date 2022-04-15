@@ -4,7 +4,7 @@ pub struct Hit<'a> {
     point: Vec3,
     normal: Vec3,
     t: f64,
-    front_face: bool,
+    pub front_face: bool,
     material: &'a dyn Material,
 }
 
@@ -44,7 +44,7 @@ impl<'a> Hit<'a> {
 }
 
 pub trait Hittable<'a> {
-    fn hit(& self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
+    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
 }
 
 pub struct HittableList<'a> {
@@ -58,7 +58,7 @@ impl<'a> HittableList<'a> {
 }
 
 impl<'a> Hittable<'a> for HittableList<'a> {
-    fn hit(& self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
+    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let mut result: Option<Hit> = None;
         let mut t_closest_so_far = t_max;
 
