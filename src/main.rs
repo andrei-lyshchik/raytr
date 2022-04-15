@@ -49,7 +49,13 @@ fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Vec3 {
 }
 
 fn main() {
-    let camera = Camera::new();
+    let camera = Camera::new(
+        Vec3::new(-2.0, 2.0, 1.0),
+        Vec3::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        50.0,
+        16.0 / 9.0,
+    );
     let image_width = 1024;
     let image_height = ((image_width as f64) / camera.aspect_ratio) as i32;
     let samples_per_pixel = 100;
@@ -78,10 +84,10 @@ fn main() {
     for j in (0..image_height).rev() {
         for i in 0..image_width {
             let mut pixel_color = Vec3::new(0.0, 0.0, 0.0);
-            for _s in 0..samples_per_pixel {
-                let u = ((i as f64) + random::<f64>()) / (image_width as f64 - 1.0);
-                let v = ((j as f64) + random::<f64>()) / (image_height as f64 - 1.0);
-                let ray = camera.ray(u, v);
+            for _sample in 0..samples_per_pixel {
+                let s = ((i as f64) + random::<f64>()) / (image_width as f64 - 1.0);
+                let t = ((j as f64) + random::<f64>()) / (image_height as f64 - 1.0);
+                let ray = camera.ray(s, t);
                 pixel_color += ray_color(&ray, &world, max_depth);
             }
             write_color(&pixel_color, samples_per_pixel);
