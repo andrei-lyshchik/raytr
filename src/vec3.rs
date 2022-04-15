@@ -10,6 +10,8 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
+    const EPSILON: f64 = 1e-8;
+
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
         return Vec3 { x, y, z };
     }
@@ -24,6 +26,14 @@ impl Vec3 {
 
     pub fn unit_vector(self: &Vec3) -> Vec3 {
         self / self.length()
+    }
+
+    pub fn near_zero(self: &Vec3) -> bool {
+        self.x.abs() < Vec3::EPSILON && self.y.abs() < Vec3::EPSILON && self.z.abs() < Vec3::EPSILON
+    }
+
+    pub fn reflect(self: &Vec3, normal: &Vec3) -> Vec3 {
+        self - normal * self.dot(normal) * 2.0
     }
 
     pub fn random(min: f64, max: f64) -> Vec3 {
@@ -154,6 +164,14 @@ impl ops::Mul<f64> for Vec3 {
     }
 }
 
+impl ops::Mul<Vec3> for &Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Vec3 {
+        Vec3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
+    }
+}
+
 impl ops::AddAssign<Vec3> for Vec3 {
     fn add_assign(&mut self, rhs: Vec3) {
         self.x += rhs.x;
@@ -166,17 +184,12 @@ impl ops::AddAssign<Vec3> for Vec3 {
 mod tests {
     use super::Vec3;
 
-    const EPSILON: f64 = 0.0001;
-
     fn assert_almost_eq(f1: f64, f2: f64) {
-        println!("{} vs {}", f1, f2);
-        assert!((f1 - f2).abs() <= EPSILON);
+        assert!((f1 - f2).abs() <= Vec3::EPSILON);
     }
 
     fn assert_vec3_almost_eq(v1: &Vec3, v2: &Vec3) {
-        assert_almost_eq(v1.x, v2.x);
-        assert_almost_eq(v1.y, v2.y);
-        assert_almost_eq(v1.z, v2.z);
+        assert!((v1 - v2).near_zero())
     }
 
     #[test]
@@ -256,6 +269,9 @@ mod tests {
     #[test]
     fn test_unit_vector() {
         let v1 = Vec3::new(1.0, 2.0, 2.0);
-        assert_vec3_almost_eq(&v1.unit_vector(), &Vec3::new(0.33333, 0.666666, 0.666666));
+        assert_vec3_almost_eq(
+            &v1.unit_vector(),
+            &Vec3::new(0.3333333333, 0.66666666666, 0.66666666666),
+        );
     }
 }

@@ -1,14 +1,21 @@
-use crate::{ray::Ray, vec3::Vec3};
+use crate::{material::Material, ray::Ray, vec3::Vec3};
 
-pub struct Hit {
+pub struct Hit<'a> {
     point: Vec3,
     normal: Vec3,
     t: f64,
     front_face: bool,
+    material: &'a dyn Material,
 }
 
-impl Hit {
-    pub fn new(ray: &Ray, point: Vec3, outward_normal: Vec3, t: f64) -> Hit {
+impl<'a> Hit<'a> {
+    pub fn new(
+        ray: &Ray,
+        point: Vec3,
+        outward_normal: Vec3,
+        t: f64,
+        material: &'a dyn Material,
+    ) -> Hit<'a> {
         let (normal, front_face) = if ray.direction.dot(&outward_normal) > 0.0 {
             (-outward_normal, false)
         } else {
@@ -19,6 +26,7 @@ impl Hit {
             normal,
             t,
             front_face,
+            material,
         }
     }
 
@@ -29,24 +37,28 @@ impl Hit {
     pub fn normal(&self) -> &Vec3 {
         &self.normal
     }
+
+    pub fn material(&'a self) -> &'a (dyn Material + 'a) {
+        self.material
+    }
 }
 
-pub trait Hittable {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
+pub trait Hittable<'a> {
+    fn hit(& self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
 }
 
-pub struct HittableList {
-    objects: Vec<Box<dyn Hittable>>,
+pub struct HittableList<'a> {
+    objects: Vec<Box<dyn Hittable<'a>>>,
 }
 
-impl HittableList {
+impl<'a> HittableList<'a> {
     pub fn new(objects: Vec<Box<dyn Hittable>>) -> HittableList {
         HittableList { objects }
     }
 }
 
-impl Hittable for HittableList {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
+impl<'a> Hittable<'a> for HittableList<'a> {
+    fn hit(& self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let mut result: Option<Hit> = None;
         let mut t_closest_so_far = t_max;
 

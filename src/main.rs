@@ -2,6 +2,7 @@ use rand::random;
 use raytr::{
     camera::Camera,
     hittable::{Hittable, HittableList},
+    material::{Lambertian, Metal},
     ray::Ray,
     sphere::Sphere,
     vec3::Vec3,
@@ -37,14 +38,10 @@ fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Vec3 {
         return Vec3::new(0.0, 0.0, 0.0);
     }
     if let Some(hit) = world.hit(ray, 0.0, f64::INFINITY) {
-        let target = hit.point() + hit.normal() + Vec3::random_unit_vector();
-        // let target = hit.point() + hit.normal() + Vec3::random_in_unit_sphere();
-        // let target = hit.point() + Vec3::random_in_hemisphere(hit.normal());
-        return ray_color(
-            &Ray::new(hit.point().clone(), &target - hit.point()),
-            world,
-            depth - 1,
-        );
+        if let Some(scatter) = hit.material().scatter(ray, &hit) {
+            return scatter.attenuation() * ray_color(scatter.ray(), world, depth - 1);
+        }
+        return Vec3::new(0.0, 0.0, 0.0);
     }
     let unit_direction = ray.direction.unit_vector();
     let t = 0.5 * (unit_direction.y + 1.0);
@@ -53,14 +50,25 @@ fn ray_color(ray: &Ray, world: &dyn Hittable, depth: i32) -> Vec3 {
 
 fn main() {
     let camera = Camera::new();
-    let image_width = 400;
+    let image_width = 1024;
     let image_height = ((image_width as f64) / camera.aspect_ratio) as i32;
     let samples_per_pixel = 100;
     let max_depth = 50;
 
+    let material_ground = Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));
+    let material_center = Box::new(Lambertian::new(Vec3::new(0.7, 0.3, 0.3)));
+    let material_left = Box::new(Metal::new(Vec3::new(0.8, 0.8, 0.8)));
+    let material_right = Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2)));
+
     let world = HittableList::new(vec![
-        Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)),
-        Box::new(Sphere::new(Vec3::new(0.0, -100.5, 0.0), 100.0)),
+        Box::new(Sphere::new(
+            Vec3::new(0.0, -100.5, 0.0),
+            100.0,
+            material_ground,
+        )),
+        Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, material_center)),
+        Box::new(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, material_left)),
+        Box::new(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, material_right)),
     ]);
 
     println!("P3");
