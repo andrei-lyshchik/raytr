@@ -21,7 +21,7 @@ impl Sphere {
     }
 }
 
-impl<'a> Hittable<'a> for Sphere {
+impl Hittable for Sphere {
     fn hit(self: & Sphere, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let oc = &ray.origin - &self.center;
         let a = ray.direction.dot(&ray.direction);

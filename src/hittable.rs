@@ -43,21 +43,21 @@ impl<'a> Hit<'a> {
     }
 }
 
-pub trait Hittable<'a> {
+pub trait Hittable {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit>;
 }
 
-pub struct HittableList<'a> {
-    objects: Vec<Box<dyn Hittable<'a>>>,
+pub struct HittableList {
+    objects: Vec<Box<dyn Hittable>>,
 }
 
-impl<'a> HittableList<'a> {
+impl HittableList {
     pub fn new(objects: Vec<Box<dyn Hittable>>) -> HittableList {
         HittableList { objects }
     }
 }
 
-impl<'a> Hittable<'a> for HittableList<'a> {
+impl Hittable for HittableList {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<Hit> {
         let mut result: Option<Hit> = None;
         let mut t_closest_so_far = t_max;
