@@ -64,7 +64,7 @@ fn main() {
     let material_ground = Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));
     let material_center = Box::new(Lambertian::new(Vec3::new(0.1, 0.2, 0.5)));
     let material_left = Box::new(Dielectric::new(2.4));
-    let material_right = Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.6));
+    let material_right = Box::new(Metal::new(Vec3::new(0.8, 0.6, 0.2), 0.0));
 
     let world = HittableList::new(vec![
         Box::new(Sphere::new(
@@ -73,7 +73,7 @@ fn main() {
             material_ground,
         )),
         Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, material_center)),
-        Box::new(Sphere::new(Vec3::new(-0.8, -0.4, -1.0), 0.1, material_left)),
+        Box::new(Sphere::new(Vec3::new(-0.7, -0.3, -1.0), 0.2, material_left)),
         Box::new(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, material_right)),
     ]);
 
