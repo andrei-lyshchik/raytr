@@ -48,11 +48,11 @@ pub trait Hittable {
 }
 
 pub struct HittableList {
-    objects: Vec<Box<dyn Hittable>>,
+    objects: Vec<Box<dyn Hittable + Send + Sync>>,
 }
 
 impl HittableList {
-    pub fn new(objects: Vec<Box<dyn Hittable>>) -> HittableList {
+    pub fn new(objects: Vec<Box<dyn Hittable + Send + Sync>>) -> HittableList {
         HittableList { objects }
     }
 }
