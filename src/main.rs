@@ -55,10 +55,12 @@ fn main() {
         Vec3::new(0.0, 1.0, 0.0),
         50.0,
         16.0 / 9.0,
+        0.1,
+        (Vec3::new(-2.0, 2.0, 1.0) - Vec3::new(0.0, 0.0, -1.0)).length(),
     );
     let image_width = 1024;
     let image_height = ((image_width as f64) / camera.aspect_ratio) as i32;
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 200;
     let max_depth = 50;
 
     let material_ground = Box::new(Lambertian::new(Vec3::new(0.8, 0.8, 0.0)));

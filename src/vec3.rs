@@ -82,6 +82,16 @@ impl Vec3 {
             -in_unit_sphere
         }
     }
+
+    pub fn random_in_unit_disk() -> Vec3 {
+        loop {
+            let p = Vec3::new(thread_rng().gen_range(-1.0..1.0), thread_rng().gen_range(-1.0..1.0), 0.0);
+            if p.dot(&p) >= 1.0 {
+                continue;
+            }
+            return p;
+        }
+    }
 }
 
 impl ops::Add<&Vec3> for &Vec3 {
